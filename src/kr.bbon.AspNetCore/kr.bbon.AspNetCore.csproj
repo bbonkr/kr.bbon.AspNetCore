@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <PackageId>kr.bbon.AspNetCore</PackageId>
+        <Title>kr.bbon.AspNetCore</Title>
+        <Version>1.0.0</Version>
+        <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
+        <Company>bbon.kr</Company>
+        <Copyright>bbon.kr. All rights reserved.</Copyright>
+        <Description>Helper for ASP.NET Core</Description>
+        <PackageTags>dotnet aspnet aspnetcore kr.bbon bbon bbon.kr</PackageTags>
+        <RepositoryUrl>https://github.com/bbonkr/kr.bbon.AspNetCore.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageIcon>http://bbon.kr/wp-content/uploads/2018/04/bbon-icon-1.png</PackageIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.0" />
+    </ItemGroup>
+
+</Project>
