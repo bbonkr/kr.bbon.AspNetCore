@@ -13,8 +13,15 @@
         <RepositoryUrl>https://github.com/bbonkr/kr.bbon.AspNetCore.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-        <PackageIcon>http://bbon.kr/wp-content/uploads/2018/04/bbon-icon-1.png</PackageIcon>
+        <PackageIcon>icon.png</PackageIcon>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="Images\**" />
+        <EmbeddedResource Remove="Images\**" />
+        <None Remove="Images\**" />
+        <None Include="Images/icon.png" Pack="true" PackagePath="/" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
