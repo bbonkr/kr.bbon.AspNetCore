@@ -18,7 +18,7 @@ namespace kr.bbon.AspNetCore
             {
                 var provider = app.ApplicationServices.GetService<IApiVersionDescriptionProvider>();
 
-                foreach (var description in provider.ApiVersionDescriptions)
+                foreach (var description in provider.ApiVersionDescriptions.Reverse())
                 {
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
