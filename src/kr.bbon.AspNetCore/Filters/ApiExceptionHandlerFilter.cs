@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace kr.bbon.AspNetCore.Filters
 {
-    public class ApiExceptionHandler : ExceptionFilterAttribute, IExceptionFilter, IAsyncExceptionFilter
+    public class ApiExceptionHandlerFilter : ExceptionFilterAttribute, IExceptionFilter, IAsyncExceptionFilter
     {
         public override void OnException(ExceptionContext context)
         {
@@ -29,21 +29,31 @@ namespace kr.bbon.AspNetCore.Filters
         private void HandleException(ExceptionContext context)
         {
             ObjectResult actionResult = null;
-            var statusCode = (int)HttpStatusCode.InternalServerError; 
-            context.HttpContext.Response.StatusCode = statusCode;
+            var statusCode = HttpStatusCode.InternalServerError;
+            var statusCodeValue = (int)statusCode; 
+
+            context.HttpContext.Response.StatusCode = statusCodeValue;
 
             if (context.Exception is HttpStatusException)
             {
                 var actual = context.Exception as HttpStatusException;
-                statusCode = (int)actual.StatusCode;
+                statusCodeValue = (int)actual.StatusCode;
 
-                context.HttpContext.Response.StatusCode = statusCode;
+                context.HttpContext.Response.StatusCode = statusCodeValue;
                 actionResult = new ObjectResult(ApiResponseModelFactory.Create(actual.StatusCode, actual.GetDetails()));
+            }
+
+            if(context.Exception is SomethingWrongException)
+            {
+                var actual = context.Exception as SomethingWrongException;
+
+                context.HttpContext.Response.StatusCode = statusCodeValue;
+                actionResult = new ObjectResult(ApiResponseModelFactory.Create(statusCode, actual.Message, actual.GetDetails()));
             }
 
             context.Result = actionResult ?? new ObjectResult(new ApiResponseModel
             {
-                StatusCode = statusCode,
+                StatusCode = statusCodeValue,
                 Message = context.Exception.Message,
             });
         }

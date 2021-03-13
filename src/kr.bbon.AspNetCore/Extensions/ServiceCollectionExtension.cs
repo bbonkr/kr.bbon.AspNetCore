@@ -24,7 +24,7 @@ namespace kr.bbon.AspNetCore
         /// <param name="services"></param>
         /// <param name="defaultVersion">If default is not set, use 1.0</param>
         /// <returns></returns>
-        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion defaultVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
+        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion defaultVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptions
         {
             services.AddApiVersioning(options =>
             {

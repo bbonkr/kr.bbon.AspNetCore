@@ -7,5 +7,7 @@ namespace kr.bbon.AspNetCore
         public static string Name = "App";
 
         public string Title { get; set; }
+
+        public string Description { get; set; }
     }
 }
