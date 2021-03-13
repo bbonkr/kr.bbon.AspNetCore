@@ -30,10 +30,33 @@ namespace kr.bbon.AspNetCore.Options
                     {
                         Title = $"{AppTitle} {description.ApiVersion}",
                         Version = description.ApiVersion.ToString(),
+                        Description = AppDescription,
                     });
             }
         }
 
         public abstract string AppTitle { get; }
+
+        public abstract string AppDescription { get; }
+    }
+
+    public class ConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
+    {
+        public ConfigureSwaggerOptions(
+            IApiVersionDescriptionProvider provider,
+            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider)
+        {
+            appOptions = appOptionsAccessor.CurrentValue ?? new AppOptions
+            {
+                Title = "Api",
+                Description = "",
+            };
+        }
+
+        public override string AppTitle => appOptions.Title;
+
+        public override string AppDescription => appOptions.Description;
+
+        private readonly AppOptions appOptions;
     }
 }

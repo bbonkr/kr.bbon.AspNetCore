@@ -136,24 +136,48 @@ ApiVersioning, Swagger 를 사용하기 위해 필요한 코드조각이 정리�
 
 ```csharp
 // ConfigureService() on Startup.cs
-services.Configure<AppOptions>(Configuration.GetSection(AppOptions.name));
+var defaultApiVersion = new ApiVersion(1, 0);
+services.Configure<AppOptions>(Configuration.GetSection(AppOptions.Name));
 
-services.AddApiVersioningAndSwaggerGen<MyConfigureSwaggerOptions>();
+services.AddApiVersioningAndSwaggerGen<ConfigureSwaggerOptions>(defaultApiVersion);
 ```
 
 ### Filter classes
 
-#### ApiExceptionHandler class
+#### ApiExceptionHandlerFilter class
 
 컨트롤러에서 처리되지 않은 예외가 발생하면 예외를 처리하는 필터를 제공합니다.
 
+예외 처리 필터를 컨트롤러에서 사용하려면 아래와 같이 클래스 특성으로 추가합니다.
+
 ```csharp
-[ApiExceptionHandler]
+[ApiExceptionHandlerFilter]
 // ...
 public class SomeController : ApiControllerBase 
 {
-
+    // ...
 }
+```
+
+예외 처리 필터를 액션에서 사용하려면 아래와 같이 클래스 특성으로 추가합니다.
+
+```csharp
+[HttpGet]
+[ApiExceptionHandlerFilter]
+public IActionResult SomeAction()
+{
+    // ...
+}
+```
+
+예외 처리 필터를 전역으로 사용하려면 아래와 같이 구성합니다.
+
+```csharp
+// ConfigureService() on Startup.cs
+services.AddControllers(options => 
+{
+    options.Filters.Add<ApiExceptionHandlerFilter>();
+});
 ```
 
 ### Model classes
@@ -172,11 +196,40 @@ public class SomeController : ApiControllerBase
 }
 ```
 
+#### ErrorModel class
+
+사용자 정의 오류를 표현합니다.
+
+```csharp
+var error = new ErrorModel
+{
+    Code = "Some code",
+    Message = "Some message",
+    InnerError = new ErrorModel
+    {
+        Code = "Some inner code",
+        Message = "Some inner message",
+    }
+});
+```
+
 ### ControllerBase classes
 
 #### ApiControllerBase class
 
 웹 응용프로그램 응답을 동일하게 제공하기 위한 코드조각이 정리되어 있습니다.
+
+```csharp
+[ApiVersion(DefaultValues.ApiVersion)]
+[ApiController]
+[Area(DefaultValues.AreaName)]
+[Route(DefaultValues.RouteTemplate)]
+[ApiExceptionHandlerFilter]
+public class WeatherForecastController : ApiControllerBase 
+{
+    // ...
+}
+```
 
 컨트롤러의 액션 메서드에서 아래와 같이 응답을 구성합니다.
 
@@ -211,7 +264,8 @@ appsettings.json 을 아래와 같이 구성하고, 서비스 구성에서 구�
 // appsettings.json 
 {
     "App": {
-        "Title": "Awesome api"
+        "Title": "Awesome api",
+        "Description": "My awesome api !!"
     },
     // ...
 }
@@ -231,14 +285,33 @@ Swagger 구성값을 위한 기본 클래스입니다.
 
 ```csharp
 public class MyConfigureSwaggerOptions :  ConfigureSwaggerOptionsBase {
-    public MyConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IOptionMonitor<AppOptions> optionsAccessor)
+    public MyConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, IOptionsMonitor<AppOptions> optionsAccessor)
         : base(provider) 
     {
         options = optionsAccessor.CurrentValue;
     }
 
-    public override string AppTitle { get => options.Title; }
+    public override string AppTitle => options.Title;
+
+    public override string AppDescription => options.Description;
 
     private readonly AppOptions options;
 }
 ```
+
+#### ConfigureSwaggerOptions class
+
+[ConfigureSwaggerOptionsBase](#configure-swagger-options-base-class) 클래스를 구현하는 클래스입니다.
+
+### Constants 
+
+#### DefaultValues class
+
+RouteTemplate: 
+  클래스 라우트 템플릿의 기본값입니다. `[area]/v{version:apiVersion}/[controller]`
+
+ApiVersion:
+  기본 버전 문자열 입니다. `1.0`
+
+AreaName:
+  영역 기본값입니다. `api`
