@@ -8,23 +8,26 @@ using kr.bbon.AspNetCore.Options;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
+using kr.bbon.AspNetCore;
 
-namespace kr.bbon.AspNetCore
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtension
     {
         /// <summary>
         /// Configre api versioning and swagger generator
+        /// <para>
+        /// If you want to set app title and description, add <see cref="ConfigureAppOptions"/> before this.
+        /// </para>
         /// </summary>
         /// <typeparam name="ActualConfigureSwaggerOptions"></typeparam>
         /// <param name="services"></param>
         /// <param name="defaultVersion">If default is not set, use 1.0</param>
         /// <returns></returns>
-        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion defaultVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptions
+        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion defaultVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
         {
             services.AddApiVersioning(options =>
             {
@@ -47,9 +50,61 @@ namespace kr.bbon.AspNetCore
             return services;
         }
 
+        /// <summary>
+        /// Configre api versioning and swagger generator with <see cref="DefaultSwaggerOptions"/>.
+        /// <para>
+        /// If you want to set app title and description, add <see cref="ConfigureAppOptions"/> before this.
+        /// </para>
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="defaultVersion"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddApiVersioningAndSwaggerGen(this IServiceCollection services, ApiVersion defaultVersion = default)
+        {
+            services.AddApiVersioningAndSwaggerGen<DefaultSwaggerOptions>(defaultVersion);
+
+            return services;
+        }
+
         public static IServiceCollection ConfigureOptions<TOptions>(this IServiceCollection services, IConfigurationSection configurationSection) where TOptions : class
         {
             services.Configure<TOptions>(configurationSection);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Configure App options.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Need to Add 'App' property in appsettings.json
+        /// <code>
+        /// {
+        ///     "App": {
+        ///         "Title": "app title here",
+        ///         "Description": "app description here"
+        ///     }
+        /// }
+        /// </code>
+        /// </para>
+        /// </remarks>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        /// <example>
+        /// <code>
+        /// {
+        ///     "App": {
+        ///         "Title": "app title here",
+        ///         "Description": "app description here"
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
 
             return services;
         }
