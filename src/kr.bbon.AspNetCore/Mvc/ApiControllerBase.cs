@@ -19,19 +19,19 @@ namespace kr.bbon.AspNetCore.Mvc
             return base.StatusCode(statusCode, ApiResponseModelFactory.Create(statusCode, string.Empty, value));
         }
 
-        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, string message, T value)
+        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, string message, T value) where T:class, new()
         {
-            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, message, value));
+            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create<T>(statusCode, message, value));
         }
 
-        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, T value)
+        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, T value) where T : class, new()
         {
             return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, string.Empty, value));
         }
 
         protected ObjectResult StatusCode(HttpStatusCode statusCode, string message)
         {
-            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create<object>(statusCode, message, default(object)));
+            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, message));
         }
     }
 }
