@@ -40,9 +40,41 @@ namespace kr.bbon.AspNetCore.Options
         public abstract string AppDescription { get; }
     }
 
+    /// <summary>
+    /// Default Swagger Options
+    /// <para>
+    /// This is deprecated, and might schedule to remove next version. Use <see cref="DefaultSwaggerOptions"/> instead.
+    /// </para>
+    /// 
+    /// </summary>
+
+    [Obsolete("Use DefaultSwaggerOptions instead.")]
     public class ConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
     {
         public ConfigureSwaggerOptions(
+            IApiVersionDescriptionProvider provider,
+            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider)
+        {
+            appOptions = appOptionsAccessor.CurrentValue ?? new AppOptions
+            {
+                Title = "Api",
+                Description = "",
+            };
+        }
+
+        public override string AppTitle => appOptions.Title;
+
+        public override string AppDescription => appOptions.Description;
+
+        private readonly AppOptions appOptions;
+    }
+
+    /// <summary>
+    /// Default Swagger options
+    /// </summary>
+    public class DefaultSwaggerOptions : ConfigureSwaggerOptionsBase
+    {
+        public DefaultSwaggerOptions(
             IApiVersionDescriptionProvider provider,
             IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider)
         {
