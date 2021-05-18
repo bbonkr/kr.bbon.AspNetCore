@@ -17,29 +17,32 @@ namespace kr.bbon.AspNetCore.Models
 
     }
 
-    public class ApiResponseModel<T> : ApiResponseModelBase
+    public class ApiResponseModel<T> : ApiResponseModelBase where T : class, new()
     {
         public T Data { get; init; }
     }
 
+    /// <summary>
+    /// Factory for <see cref="ApiResponseModel"/>
+    /// </summary>
     public class ApiResponseModelFactory
     {
-        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, string message = "")
+        public static ApiResponseModel<object> Create(HttpStatusCode statusCode, string message = "") 
         {
-            return Create((int)statusCode, message, default(T));
+            return Create<object>((int)statusCode, message, default);
         }
 
-        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, T data = default(T))
+        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, T data = default(T)) where T : class, new()
         {
             return Create((int)statusCode, string.Empty, data);
         }
 
-        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, string message = "", T data = default(T))
+        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, string message = "", T data = default(T)) where T : class, new()
         {
             return Create((int)statusCode, message, data);
         }
 
-        public static ApiResponseModel<T> Create<T>(int statusCode, string message = "", T data = default(T))
+        public static ApiResponseModel<T> Create<T>(int statusCode, string message = "", T data = default(T)) where T : class, new()
         {
             return new ApiResponseModel<T>
             {
