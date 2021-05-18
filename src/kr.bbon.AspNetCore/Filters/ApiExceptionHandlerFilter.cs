@@ -34,28 +34,60 @@ namespace kr.bbon.AspNetCore.Filters
 
             context.HttpContext.Response.StatusCode = statusCodeValue;
 
-            if (context.Exception is HttpStatusException)
+            if (context.Exception is HttpStatusException httpStatusException)
             {
-                var actual = context.Exception as HttpStatusException;
-                statusCodeValue = (int)actual.StatusCode;
-
-                context.HttpContext.Response.StatusCode = statusCodeValue;
-                actionResult = new ObjectResult(ApiResponseModelFactory.Create(actual.StatusCode, actual.GetDetails()));
+                statusCodeValue = (int)httpStatusException.StatusCode;                
+                actionResult = new ObjectResult(ApiResponseModelFactory.Create(httpStatusException.StatusCode, httpStatusException.GetDetails()));
             }
 
-            if(context.Exception is SomethingWrongException)
-            {
-                var actual = context.Exception as SomethingWrongException;
-
-                context.HttpContext.Response.StatusCode = statusCodeValue;
-                actionResult = new ObjectResult(ApiResponseModelFactory.Create(statusCode, actual.Message, actual.GetDetails()));
+            if(context.Exception is SomethingWrongException somethingWrongException)
+            {                
+                actionResult = new ObjectResult(ApiResponseModelFactory.Create(statusCode, somethingWrongException.Message, somethingWrongException.GetDetails()));
             }
 
-            context.Result = actionResult ?? new ObjectResult(new ApiResponseModel
+            if (context.Exception is AggregateException aggregateException)
             {
-                StatusCode = statusCodeValue,
-                Message = context.Exception.Message,
-            });
+                var innerErrors = aggregateException.InnerExceptions != null && aggregateException.InnerExceptions.Count > 0
+                        ? aggregateException.InnerExceptions.Select((inner, index) => new ErrorModel
+                        {
+                            Code = $"Inner Error {index + 1}",
+                            Message = inner.Message,
+                        }).ToList()
+                        : new List<ErrorModel>();
+
+                actionResult = new ObjectResult(ApiResponseModelFactory.Create(statusCodeValue, aggregateException.Message, new ErrorModel
+                {
+                    Code = "HTTP 500",
+                    Message = aggregateException.Message,
+                    InnerError = innerErrors.FirstOrDefault(),
+                    InnerErrors = innerErrors,
+                }));
+            }
+
+            if (actionResult == null)
+            {
+                var innerErrors = context.Exception.InnerException != null
+                    ? new List<ErrorModel>{
+                        new ErrorModel
+                        {
+                            Code = "Inner exception",
+                            Message = context.Exception.InnerException.Message,
+                        },
+                    }
+                    : new List<ErrorModel>();
+
+
+                actionResult = new ObjectResult(ApiResponseModelFactory.Create(statusCodeValue, context.Exception.Message, new ErrorModel
+                {
+                    Code = "HTTP 500",
+                    Message = context.Exception.Message,
+                    InnerError = innerErrors.FirstOrDefault(),
+                    InnerErrors = innerErrors,
+                }));
+            }
+
+            context.HttpContext.Response.StatusCode = statusCodeValue;
+            context.Result = actionResult;
         }
     }
 }
