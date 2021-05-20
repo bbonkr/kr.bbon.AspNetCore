@@ -19,12 +19,12 @@ namespace kr.bbon.AspNetCore.Mvc
             return base.StatusCode(statusCode, ApiResponseModelFactory.Create(statusCode, string.Empty, value));
         }
 
-        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, string message, T value) where T:class, new()
+        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, string message, T value) 
         {
-            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create<T>(statusCode, message, value));
+            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, message, value));
         }
 
-        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, T value) where T : class, new()
+        protected ObjectResult StatusCode<T>(HttpStatusCode statusCode, T value) 
         {
             return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, string.Empty, value));
         }
@@ -32,6 +32,11 @@ namespace kr.bbon.AspNetCore.Mvc
         protected ObjectResult StatusCode(HttpStatusCode statusCode, string message)
         {
             return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode, message));
+        }
+
+        protected ObjectResult StatusCode(HttpStatusCode statusCode)
+        {
+            return base.StatusCode((int)statusCode, ApiResponseModelFactory.Create(statusCode));
         }
     }
 }
