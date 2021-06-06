@@ -25,22 +25,22 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <typeparam name="ActualConfigureSwaggerOptions"></typeparam>
         /// <param name="services"></param>
-        /// <param name="defaultVersion">If default is not set, use 1.0</param>
+        /// <param name="apiVersion">If default is not set, use 1.0</param>
         /// <returns></returns>
-        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion defaultVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
+        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion apiVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
         {
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = defaultVersion;
+                options.DefaultApiVersion = apiVersion;
             });
 
             services.AddVersionedApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
-                options.DefaultApiVersion = defaultVersion;
+                options.DefaultApiVersion = apiVersion;
             });
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
@@ -66,12 +66,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IServiceCollection ConfigureOptions<TOptions>(this IServiceCollection services, IConfigurationSection configurationSection) where TOptions : class
-        {
-            services.Configure<TOptions>(configurationSection);
-
-            return services;
-        }
 
         /// <summary>
         /// Configure App options.

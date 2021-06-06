@@ -14,7 +14,8 @@ categories:
     labels: 
       - 'chore'
       - 'doc'
-      - 'documentation'      
+      - 'documentation'
+      - 'Modifications'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 exclude-labels:
   - 'skip-changelog'
