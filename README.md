@@ -130,16 +130,13 @@ IServiceCollection 인터페이스에 AddApiVersioningAndSwaggerGen 메서드를
 
 ApiVersioning, Swagger 를 사용하기 위해 필요한 코드조각이 정리되어 있습니다.
 
-> 사전요구사항
-> * [AppOptions](#app-options-class) 객체를 제공해야 Swagger UI에서 웹 응용프로그램의 제목을 출력할 수 있습니다.
-> * [ConfigureSwaggerOptionsBase](#configure-swagger-options-base-class) 클래스를 상속하는 구성 클래스를 제공해야 합니다.
 
 ```csharp
 // ConfigureService() on Startup.cs
 var defaultApiVersion = new ApiVersion(1, 0);
 services.Configure<AppOptions>(Configuration.GetSection(AppOptions.Name));
 
-services.AddApiVersioningAndSwaggerGen<ConfigureSwaggerOptions>(defaultApiVersion);
+services.AddApiVersioningAndSwaggerGen(defaultApiVersion);
 ```
 
 ### Filter classes
@@ -188,7 +185,7 @@ services.AddControllers(options =>
 
 아래와 같은 형식으로 HTTP 응답 본문을 제공합니다.
 
-```json
+```
 {
     statusCode: number
     message: string
@@ -243,9 +240,9 @@ HTTP 응답본문은 아래와 같이 제공됩니다.
 
 ```json
 {
-    statusCode: 200,
-    message: null,
-    data: {
+    "statusCode": 200,
+    "message": null,
+    "data": {
         // ...responseData
     }
 }
