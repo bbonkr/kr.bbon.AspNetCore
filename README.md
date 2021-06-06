@@ -185,7 +185,7 @@ services.AddControllers(options =>
 
 아래와 같은 형식으로 HTTP 응답 본문을 제공합니다.
 
-```json
+```
 {
     statusCode: number
     message: string
@@ -240,9 +240,9 @@ HTTP 응답본문은 아래와 같이 제공됩니다.
 
 ```json
 {
-    statusCode: 200,
-    message: null,
-    data: {
+    "statusCode": 200,
+    "message": null,
+    "data": {
         // ...responseData
     }
 }
