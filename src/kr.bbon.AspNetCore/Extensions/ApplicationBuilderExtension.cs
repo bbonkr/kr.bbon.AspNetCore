@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace kr.bbon.AspNetCore
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtension
     {
