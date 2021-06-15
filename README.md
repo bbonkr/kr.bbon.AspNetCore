@@ -66,6 +66,8 @@ throw new HttpStatusException(HttpStatusCode.BadRequest, new SomeDetails
 
 사용자 정의 예외를 표현하기 위해 사용합니다.
 
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
+
 ```csharp
 // Exception handling in action method 
 try
@@ -85,6 +87,8 @@ catch(Exception ex)
 #### SomethingWrongException<TDetails>
 
 사용자 정의 예외와 상세 정보를 표현하기 위해 사용합니다.
+
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
 
 ```csharp
 throw new SomethingWrongException("데이터를 처리하지 못했습니다.", new SomeDetails 
@@ -112,6 +116,8 @@ app.UseSwaggerUIWithApiVersioning();
 Object 클래스에 ToJson 메서드를 추가합니다.
 
 객체의 인스턴스를 JSON 문자열로 직렬화하는 기능을 제공합니다.
+
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
 
 ```csharp
 var sample = getSampleModel();
