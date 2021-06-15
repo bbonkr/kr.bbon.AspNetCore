@@ -22,22 +22,44 @@ namespace kr.bbon.AspNetCore.Options
 
         public void Configure(SwaggerGenOptions options)
         {
-            foreach (var description in provider.ApiVersionDescriptions)
-            {
-                options.SwaggerDoc(
-                  description.GroupName,
-                    new OpenApiInfo()
-                    {
-                        Title = $"{AppTitle} {description.ApiVersion}",
-                        Version = description.ApiVersion.ToString(),
-                        Description = AppDescription,
-                    });
-            }
+            ConfigureSwaggerOptions(options);
         }
 
         public abstract string AppTitle { get; }
 
         public abstract string AppDescription { get; }
+
+        private void ConfigureSwaggerOptions(SwaggerGenOptions options)
+        {
+            foreach (var description in provider.ApiVersionDescriptions)
+            {
+                CustomOperationIds(options, description);
+                SwaggerDoc(options, description);
+            }
+        }
+
+        /// <summary>
+        /// Configure SwaggerDoc
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="apiVersionDescription"></param>
+        protected abstract void SwaggerDoc(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription);
+
+        /// <summary>
+        /// Configure Custom operation ids
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="apiVersionDescription"></param>
+        protected abstract void CustomOperationIds(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription);
+
+        protected string GetDelimiter(string value, string delimiter = "_")
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                return "";
+            }
+            return string.Empty;
+        }
     }
 
     /// <summary>
@@ -49,11 +71,11 @@ namespace kr.bbon.AspNetCore.Options
     /// </summary>
 
     [Obsolete("Use DefaultSwaggerOptions instead.")]
-    public class ConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
+    public class ConfigureSwaggerOptions : DefaultSwaggerOptions
     {
         public ConfigureSwaggerOptions(
             IApiVersionDescriptionProvider provider,
-            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider)
+            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider, appOptionsAccessor)
         {
             appOptions = appOptionsAccessor.CurrentValue ?? new AppOptions
             {
@@ -85,10 +107,47 @@ namespace kr.bbon.AspNetCore.Options
             };
         }
 
+        protected override void SwaggerDoc(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription)
+        {
+            options.SwaggerDoc(
+                  apiVersionDescription.GroupName,
+                    new OpenApiInfo()
+                    {
+                        Title = $"{AppTitle} {apiVersionDescription.ApiVersion}",
+                        Version = apiVersionDescription.ApiVersion.ToString(),
+                        Description = AppDescription,
+                    });
+        }
+
+        /// <summary>
+        /// id template: {area:api}{version:v1.1.0-alpha}{controller:Users}{action:GetUsers}
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="apiVersionDescription"></param>
+        protected override void CustomOperationIds(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription)
+        {
+            options.CustomOperationIds(d =>
+            {
+                var area = d.ActionDescriptor.RouteValues["area"] ?? string.Empty;
+                // https://github.com/microsoft/aspnet-api-versioning/blob/master/src/Common/Versioning/ApiVersionFormatProvider.cs
+                var version = d.GetApiVersion().ToString("'v'VVVV");
+                //if (!string.IsNullOrWhiteSpace(version))
+                //{
+                //    version = $"v{version}";
+                //}
+                var controller = d.ActionDescriptor.RouteValues["controller"];
+                var action = d.ActionDescriptor.RouteValues["action"] ?? d.HttpMethod;
+
+                return $"{area}{GetDelimiter(area, string.Empty)}{version}{GetDelimiter(version, string.Empty)}{controller}{GetDelimiter(controller)}{action}";
+            });
+        }
+
         public override string AppTitle => appOptions.Title;
 
         public override string AppDescription => appOptions.Description;
 
         private readonly AppOptions appOptions;
     }
+
+    
 }
