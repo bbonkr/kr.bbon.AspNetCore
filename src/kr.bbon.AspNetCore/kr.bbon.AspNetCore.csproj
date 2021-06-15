@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <PackageId>kr.bbon.AspNetCore</PackageId>
         <Title>kr.bbon.AspNetCore</Title>
-        <Version>1.0.6</Version>
+        <Version>1.1.0</Version>
         <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
         <Company>bbon.kr</Company>
         <Copyright>bbon.kr. All rights reserved.</Copyright>
@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="kr.bbon.Core" Version="1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1" />

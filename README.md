@@ -27,7 +27,10 @@ ASP.NET Core MVC를 지원하는 기능을 포함합니다.
 
 #### HttpStatusException class
 
+
 HTTP 예외를 표현하기 위해 사용됩니다.
+
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
 
 ```csharp
 // Exception handling in action method
@@ -48,6 +51,8 @@ catch(Exception ex)
 #### HttpStatusException<TDeatails> class
 
 HTTP 예외와 상세 정보를 표현하기 위해 사용됩니다.
+
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
 
 ```csharp
 throw new HttpStatusException(HttpStatusCode.BadRequest, new SomeDetails
@@ -197,6 +202,8 @@ services.AddControllers(options =>
 
 사용자 정의 오류를 표현합니다.
 
+> [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
+
 ```csharp
 var error = new ErrorModel
 {
@@ -215,6 +222,8 @@ var error = new ErrorModel
 #### ApiControllerBase class
 
 웹 응용프로그램 응답을 동일하게 제공하기 위한 코드조각이 정리되어 있습니다.
+
+> ⚠ ApiControllerBase 클래스를 상속하는 ApiController 는 `ApiVersionAttribute`, `AreaAttribute`, `RouteAttribute` 를 필수적으로 사용해야 합니다.
 
 ```csharp
 [ApiVersion(DefaultValues.ApiVersion)]

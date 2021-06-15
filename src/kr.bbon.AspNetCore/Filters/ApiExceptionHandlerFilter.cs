@@ -5,10 +5,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+using kr.bbon.Core;
 using kr.bbon.AspNetCore.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using kr.bbon.Core.Models;
 
 namespace kr.bbon.AspNetCore.Filters
 {
@@ -59,7 +61,6 @@ namespace kr.bbon.AspNetCore.Filters
                 {
                     Code = "HTTP 500",
                     Message = aggregateException.Message,
-                    InnerError = innerErrors.FirstOrDefault(),
                     InnerErrors = innerErrors,
                 }));
             }
@@ -81,7 +82,6 @@ namespace kr.bbon.AspNetCore.Filters
                 {
                     Code = "HTTP 500",
                     Message = context.Exception.Message,
-                    InnerError = innerErrors.FirstOrDefault(),
                     InnerErrors = innerErrors,
                 }));
             }
