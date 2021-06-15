@@ -29,18 +29,22 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion apiVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
         {
+            var actualApiVersion = apiVersion ?? new ApiVersion(1, 0);
+
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = apiVersion;
+                options.RegisterMiddleware = true;
+                options.DefaultApiVersion = actualApiVersion;
+                options.ReportApiVersions = true;                
             });
 
             services.AddVersionedApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
-                options.DefaultApiVersion = apiVersion;
+                options.DefaultApiVersion = actualApiVersion;
             });
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
@@ -99,6 +103,13 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
+
+            return services;
+        }
+
+        public static IServiceCollection AddHealthCheck<THealthChecker>(this IServiceCollection services, string name= "default_health_check") where THealthChecker : HealthCheckBase
+        {
+            services.AddHealthChecks().AddCheck<THealthChecker>(name);
 
             return services;
         }
