@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtension
     {
-        public static IApplicationBuilder UseSwaggerUIWithApiVersioning(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSwaggerUIWithApiVersioning(this IApplicationBuilder app, Action<SwaggerUIOptions> setupAction = null)
         {
             app.UseSwagger();
             app.UseSwaggerUI(options =>
@@ -21,6 +22,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 foreach (var description in provider.ApiVersionDescriptions.Reverse())
                 {
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
+
+                if (setupAction != null)
+                {
+                    setupAction(options);
                 }
             });
 
