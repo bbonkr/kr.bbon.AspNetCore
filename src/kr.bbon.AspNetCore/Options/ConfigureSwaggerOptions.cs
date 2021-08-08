@@ -75,7 +75,7 @@ namespace kr.bbon.AspNetCore.Options
     {
         public ConfigureSwaggerOptions(
             IApiVersionDescriptionProvider provider,
-            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider, appOptionsAccessor)
+            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider, appOptionsAccessor, null)
         {
             appOptions = appOptionsAccessor.CurrentValue ?? new AppOptions
             {
@@ -98,25 +98,26 @@ namespace kr.bbon.AspNetCore.Options
     {
         public DefaultSwaggerOptions(
             IApiVersionDescriptionProvider provider,
-            IOptionsMonitor<AppOptions> appOptionsAccessor) : base(provider)
+            IOptionsMonitor<AppOptions> appOptionsAccessor,
+            IOptionsMonitor<OpenApiInfo> openApiInfoAccessor) : base(provider)
         {
             appOptions = appOptionsAccessor.CurrentValue ?? new AppOptions
             {
                 Title = "Api",
                 Description = "",
             };
+            openApiInfo = openApiInfoAccessor.CurrentValue ?? new OpenApiInfo
+            {
+                Title = appOptions.Title,
+                Description = appOptions.Description,
+            };
         }
 
         protected override void SwaggerDoc(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription)
         {
-            options.SwaggerDoc(
-                  apiVersionDescription.GroupName,
-                    new OpenApiInfo()
-                    {
-                        Title = $"{AppTitle} {apiVersionDescription.ApiVersion}",
-                        Version = apiVersionDescription.ApiVersion.ToString(),
-                        Description = AppDescription,
-                    });
+            openApiInfo.Version = apiVersionDescription.ApiVersion.ToString();
+
+            options.SwaggerDoc(apiVersionDescription.GroupName, openApiInfo);
         }
 
         /// <summary>
@@ -147,7 +148,8 @@ namespace kr.bbon.AspNetCore.Options
         public override string AppDescription => appOptions.Description;
 
         private readonly AppOptions appOptions;
+        private readonly OpenApiInfo openApiInfo;
     }
 
-    
+
 }
