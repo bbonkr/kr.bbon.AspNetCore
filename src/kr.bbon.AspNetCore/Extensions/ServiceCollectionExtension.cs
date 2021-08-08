@@ -26,8 +26,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <typeparam name="ActualConfigureSwaggerOptions"></typeparam>
         /// <param name="services"></param>
         /// <param name="apiVersion">If default is not set, use 1.0</param>
+        /// <param name="setupAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(this IServiceCollection services, ApiVersion apiVersion = default) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
+        public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(
+            this IServiceCollection services, 
+            ApiVersion apiVersion = default, 
+            Action<SwaggerGenOptions> setupAction = null) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
         {
             var actualApiVersion = apiVersion ?? new ApiVersion(1, 0);
 
@@ -49,7 +53,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                if (setupAction != null)
+                {
+                    setupAction(options);
+                }
+            });
 
             return services;
         }
