@@ -5,11 +5,11 @@ using System.Net;
 
 namespace kr.bbon.AspNetCore.Models
 {
-    public abstract class ApiResponseModelBase
+    public interface IApiResponse
     {
-        public int StatusCode { get; init; }
+        public int StatusCode { get; set; }
 
-        public string Message { get; init; }
+        public string Message { get; set; }
 
         public string Instance { get; set; }
 
@@ -18,14 +18,24 @@ namespace kr.bbon.AspNetCore.Models
         public string Method { get; set; }
     }
 
-    public class ApiResponseModel : ApiResponseModelBase
+    public interface IApiResponseWithData<T> : IApiResponse
     {
-
+        public T Data { get; set; }
     }
 
-    public class ApiResponseModel<T> : ApiResponseModelBase
+    public class ApiResponseModel<T>: IApiResponseWithData<T>
     {
-        public T Data { get; init; }
+        public int StatusCode { get; set; }
+
+        public string Message { get; set; }
+
+        public string Instance { get; set; }
+
+        public string Path { get; set; }
+
+        public string Method { get; set; }
+
+        public T Data { get; set; }
     }
 
     /// <summary>
@@ -35,11 +45,11 @@ namespace kr.bbon.AspNetCore.Models
     {
         public static ApiResponseModel<object> Create(HttpStatusCode statusCode, string message)
         {
-            return Create<object>(
+            return Create(
                 statusCode: (int)statusCode,
                 message: message,
                 instance: default,
-                data: default);
+                data: default(object));
         }
 
         public static ApiResponseModel<object> Create(HttpStatusCode statusCode)
