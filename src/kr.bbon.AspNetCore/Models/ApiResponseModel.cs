@@ -10,6 +10,12 @@ namespace kr.bbon.AspNetCore.Models
         public int StatusCode { get; init; }
 
         public string Message { get; init; }
+
+        public string Instance { get; set; }
+
+        public string Path { get; set; }
+
+        public string Method { get; set; }
     }
 
     public class ApiResponseModel : ApiResponseModelBase
@@ -17,7 +23,7 @@ namespace kr.bbon.AspNetCore.Models
 
     }
 
-    public class ApiResponseModel<T> : ApiResponseModelBase 
+    public class ApiResponseModel<T> : ApiResponseModelBase
     {
         public T Data { get; init; }
     }
@@ -27,34 +33,60 @@ namespace kr.bbon.AspNetCore.Models
     /// </summary>
     public class ApiResponseModelFactory
     {
-        public static ApiResponseModel<object> Create(HttpStatusCode statusCode, string message = "")
+        public static ApiResponseModel<object> Create(HttpStatusCode statusCode, string message)
         {
-            return Create<object>((int)statusCode, message, default);
+            return Create<object>(
+                statusCode: (int)statusCode,
+                message: message,
+                instance: default,
+                data: default);
         }
 
         public static ApiResponseModel<object> Create(HttpStatusCode statusCode)
         {
-            return Create<object>((int)statusCode, string.Empty, default);
+            return Create<object>(
+                 statusCode: (int)statusCode,
+                 message: default,
+                 instance: default,
+                 data: default);
         }
 
-        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, T data = default) 
+        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, T data)
         {
-            return Create((int)statusCode, string.Empty, data);
+            return Create(
+                statusCode: (int)statusCode,
+                message: default,
+                instance: default,
+                data: data);
         }
 
-        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, string message = "", T data = default) 
+        public static ApiResponseModel<T> Create<T>(HttpStatusCode statusCode, string message, T data)
         {
-            return Create((int)statusCode, message, data);
+            return Create(
+                statusCode: (int)statusCode,
+                message: message,
+                instance: default,
+                data: data);
         }
 
-        public static ApiResponseModel<T> Create<T>(int statusCode, string message = "", T data = default) 
+        public static ApiResponseModel<T> Create<T>(int statusCode, string message, T data)
+        {
+            return Create(
+                statusCode: statusCode,
+                message: message,
+                instance: default,
+                data: data);
+        }
+
+        public static ApiResponseModel<T> Create<T>(int statusCode, string message = default, string instance = default, T data = default)
         {
             return new ApiResponseModel<T>
             {
                 StatusCode = statusCode,
-                Message = message,
+                Message = message ?? $"{(HttpStatusCode)statusCode}",
                 Data = data,
+                Instance = instance,
             };
-        }      
+        }
     }
 }
