@@ -52,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.DefaultApiVersion = actualApiVersion;
             });
 
-            services.AddScoped<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
 
             services.AddSwaggerGen(options =>
             {
