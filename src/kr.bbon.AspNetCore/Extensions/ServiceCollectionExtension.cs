@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 using kr.bbon.AspNetCore;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -51,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.DefaultApiVersion = actualApiVersion;
             });
 
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
+            services.AddScoped<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
 
             services.AddSwaggerGen(options =>
             {
@@ -113,6 +114,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
+
+            services.Configure<OpenApiInfo>(configuration.GetSection(AppOptions.Name));
 
             return services;
         }
