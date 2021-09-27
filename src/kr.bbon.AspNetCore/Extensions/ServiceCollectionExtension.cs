@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using kr.bbon.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Builder;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -122,7 +124,42 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddHealthCheck<THealthChecker>(this IServiceCollection services, string name= "default_health_check") where THealthChecker : HealthCheckBase
         {
-            services.AddHealthChecks().AddCheck<THealthChecker>(name);
+            services.AddHealthChecks()
+                .AddCheck<THealthChecker>(name);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Use forwarded headers 
+        /// </summary>
+        /// <remarks>https://docs.microsoft.com/ko-kr/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-5.0#forwarded-headers</remarks>
+        /// <param name="services"></param>
+        /// <param name="enabledForwardedHeaders">Typically use this code `Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED")`</param>
+        /// <param name="configureMoreOptions">Configure more</param>
+        /// <returns></returns>
+        public static IServiceCollection AddForwardedHeaders(this IServiceCollection services, 
+            bool enabledForwardedHeaders = false, 
+            Action<ForwardedHeadersOptions> configureMoreOptions = null)
+        {
+            if (enabledForwardedHeaders)
+            {
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                        ForwardedHeaders.XForwardedProto;
+                    // Only loopback proxies are allowed by default.
+                    // Clear that restriction because forwarders are enabled by explicit 
+                    // configuration.
+                    options.KnownNetworks.Clear();
+                    options.KnownProxies.Clear();
+                    
+                    if (configureMoreOptions != null)
+                    {
+                        configureMoreOptions(options);
+                    }
+                });
+            }
 
             return services;
         }
