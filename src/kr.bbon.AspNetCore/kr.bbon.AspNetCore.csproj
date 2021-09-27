@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <PackageId>kr.bbon.AspNetCore</PackageId>
         <Title>kr.bbon.AspNetCore</Title>
-        <Version>1.1.7</Version>
+        <Version>1.1.8</Version>
         <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
         <Company>bbon.kr</Company>
         <Copyright>bbon.kr. All rights reserved.</Copyright>
@@ -14,6 +14,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,13 +22,14 @@
         <EmbeddedResource Remove="Images\**" />
         <None Remove="Images\**" />
         <None Include="Images/icon.png" Pack="true" PackagePath="/" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="kr.bbon.Core" Version="1.2.2" />
+        <PackageReference Include="kr.bbon.Core" Version="1.2.3" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
     </ItemGroup>
 
 </Project>

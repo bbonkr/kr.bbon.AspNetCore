@@ -13,6 +13,8 @@
 
 웹 응용프로그램에서 사용되는 기능과 확장 메서드를 포함합니다.
 
+> [kr.bbon.Core](https://www.nuget.org/packages/kr.bbon.Core) 패키지로 이동되었습니다.
+
 ### kr.bbon.AspNetCore.Filters
 
 ASP.NET Core Mvc Filters를 지원하는 기능을 포함합니다.
@@ -27,6 +29,7 @@ ASP.NET Core MVC를 지원하는 기능을 포함합니다.
 
 #### HttpStatusException class
 
+> [kr.bbon.Core](https://www.nuget.org/packages/kr.bbon.Core) 패키지로 이동되었습니다.
 
 HTTP 예외를 표현하기 위해 사용됩니다.
 
@@ -50,6 +53,8 @@ catch(Exception ex)
 
 #### HttpStatusException<TDeatails> class
 
+> [kr.bbon.Core](https://www.nuget.org/packages/kr.bbon.Core) 패키지로 이동되었습니다.
+
 HTTP 예외와 상세 정보를 표현하기 위해 사용됩니다.
 
 > [kr.bbon.Core](https://github.com/bbonkr/kr.bbon.AspNetCore) 패키지로 이전되었습니다.
@@ -63,6 +68,8 @@ throw new HttpStatusException(HttpStatusCode.BadRequest, new SomeDetails
 ```
 
 #### SomethingWrongException
+
+> [kr.bbon.Core](https://www.nuget.org/packages/kr.bbon.Core) 패키지로 이동되었습니다.
 
 사용자 정의 예외를 표현하기 위해 사용합니다.
 
@@ -85,6 +92,8 @@ catch(Exception ex)
 ```
 
 #### SomethingWrongException<TDetails>
+
+> [kr.bbon.Core](https://www.nuget.org/packages/kr.bbon.Core) 패키지로 이동되었습니다.
 
 사용자 정의 예외와 상세 정보를 표현하기 위해 사용합니다.
 
@@ -200,6 +209,9 @@ services.AddControllers(options =>
 {
     statusCode: number
     message: string
+    instance: string
+    path: string
+    method: string
     data: T
 }
 ```
@@ -271,6 +283,8 @@ HTTP 응답본문은 아래와 같이 제공됩니다.
 응용 프로그램 구성값을 표현합니다.
 
 appsettings.json 을 아래와 같이 구성하고, 서비스 구성에서 구성값을 읽어서 처리합니다.
+
+OpenApiInfo 클래스도 동일한 값으로 구성됩니다.
 
 ```json
 // appsettings.json 
