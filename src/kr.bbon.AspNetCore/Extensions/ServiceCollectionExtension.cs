@@ -76,9 +76,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services"></param>
         /// <param name="defaultVersion"></param>
         /// <returns></returns>
-        public static IServiceCollection AddApiVersioningAndSwaggerGen(this IServiceCollection services, ApiVersion defaultVersion = default)
+        public static IServiceCollection AddApiVersioningAndSwaggerGen(
+            this IServiceCollection services, 
+            ApiVersion defaultVersion = default, 
+            Action<SwaggerGenOptions> setupAction = null)
         {
-            services.AddApiVersioningAndSwaggerGen<DefaultSwaggerOptions>(defaultVersion);
+            services.AddApiVersioningAndSwaggerGen<DefaultSwaggerOptions>(defaultVersion, setupAction);
 
             return services;
         }
@@ -113,11 +116,18 @@ namespace Microsoft.Extensions.DependencyInjection
         /// }
         /// </code>
         /// </example>
-        public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration = null)
         {
-            services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
-
-            services.Configure<OpenApiInfo>(configuration.GetSection(AppOptions.Name));
+            if (configuration == null)
+            {
+                services.AddOptions<AppOptions>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name));
+                services.AddOptions<OpenApiInfo>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name));
+            }
+            else
+            {
+                services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
+                services.Configure<OpenApiInfo>(configuration.GetSection(AppOptions.Name));
+            }
 
             return services;
         }
