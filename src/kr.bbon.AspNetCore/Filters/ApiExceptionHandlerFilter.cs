@@ -39,9 +39,7 @@ namespace kr.bbon.AspNetCore.Filters
 
             var path = context.HttpContext.Request.Path;
             var method = context.HttpContext.Request.Method;
-            var instance = context.ActionDescriptor.DisplayName;
-
-            context.HttpContext.Response.StatusCode = statusCodeValue;
+            var instance = context.ActionDescriptor.DisplayName;            
 
             if (context.Exception is HttpStatusException httpStatusException)
             {
@@ -59,6 +57,7 @@ namespace kr.bbon.AspNetCore.Filters
 
             if (context.Exception is ApiException apiException)
             {
+                statusCodeValue = apiException.StatusCode;
                 responseModel = ApiResponseModelFactory.Create(statusCode, apiException.Message, apiException.Error);
             }
 
