@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <PackageId>kr.bbon.AspNetCore</PackageId>
         <Title>kr.bbon.AspNetCore</Title>
-        <Version>1.1.9</Version>
+        <Version>1.1.10</Version>
         <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
         <Company>bbon.kr</Company>
         <Copyright>bbon.kr. All rights reserved.</Copyright>
@@ -26,10 +26,26 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="kr.bbon.Core" Version="1.2.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+        <PackageReference Include="kr.bbon.Core" Version="1.3.0">
+            <IncludeAssets>all</IncludeAssets>
+            <ExcludeAssets>contentFiles</ExcludeAssets>
+            <PrivateAssets>contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0" >
+            <IncludeAssets>all</IncludeAssets>
+            <ExcludeAssets>contentFiles</ExcludeAssets>
+            <PrivateAssets>contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" >
+            <IncludeAssets>all</IncludeAssets>
+            <ExcludeAssets>contentFiles</ExcludeAssets>
+            <PrivateAssets>contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3">
+            <IncludeAssets>all</IncludeAssets>
+            <ExcludeAssets>contentFiles</ExcludeAssets>
+            <PrivateAssets>contentFiles;analyzers</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
 </Project>
