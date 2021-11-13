@@ -45,20 +45,20 @@ namespace kr.bbon.AspNetCore.Filters
             {
                 statusCodeValue = (int)httpStatusException.StatusCode;
 
-                responseModel = ApiResponseModelFactory.Create(httpStatusException.StatusCode, message:
+                responseModel = ApiResponseModelFactory.Create(statusCodeValue, message:
                     httpStatusException.Message,
                     data: httpStatusException.GetDetails());
             }
 
             if (context.Exception is SomethingWrongException somethingWrongException)
             {
-                responseModel = ApiResponseModelFactory.Create(statusCode, somethingWrongException.Message, somethingWrongException.GetDetails());
+                responseModel = ApiResponseModelFactory.Create(statusCodeValue, somethingWrongException.Message, somethingWrongException.GetDetails());
             }
 
             if (context.Exception is ApiException apiException)
             {
                 statusCodeValue = apiException.StatusCode;
-                responseModel = ApiResponseModelFactory.Create(statusCode, apiException.Message, apiException.Error);
+                responseModel = ApiResponseModelFactory.Create(statusCodeValue, apiException.Message, apiException.Error);
             }
 
             if (context.Exception is AggregateException aggregateException)
