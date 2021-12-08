@@ -15,8 +15,9 @@ using kr.bbon.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace kr.bbon.AspNetCore.DependencyInjection
 {
     public static class ServiceCollectionExtension
     {
