@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using FluentValidation;
+using FluentValidation.AspNetCore;
+
+using kr.bbon.AspNetCore.DependencyInjection;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,7 +35,14 @@ namespace SampleApp
 
             services.ConfigureAppOptions(Configuration);
 
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureDefaultApiBehaviorOptions()
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssembly(typeof(Startup).Assembly);
+                });
+
+            services.AddValidatorsFromAssembly(typeof(Startup).Assembly);
 
             services.AddApiVersioningAndSwaggerGen();
         }

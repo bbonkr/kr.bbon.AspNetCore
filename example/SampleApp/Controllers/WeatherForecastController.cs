@@ -47,12 +47,6 @@ namespace SampleApp.Controllers
             .ToArray();
 
             return StatusCode(System.Net.HttpStatusCode.OK, items);
-        }
-
-        [HttpPost]
-        public IActionResult SampleException()
-        {
-            throw new Exception("Hello world!!");
-        }
+        }   
     }
 }
