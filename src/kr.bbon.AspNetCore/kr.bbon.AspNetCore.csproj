@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <!--<TargetFramework>net5.0</TargetFramework>-->
+        <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
         <PackageId>kr.bbon.AspNetCore</PackageId>
         <Title>kr.bbon.AspNetCore</Title>
-        <Version>1.1.10</Version>
+        <Version>1.2.0</Version>
         <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
         <Company>bbon.kr</Company>
         <Copyright>bbon.kr. All rights reserved.</Copyright>
@@ -17,6 +18,10 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <OpenApiGenerateDocuments>false</OpenApiGenerateDocuments>
+    </PropertyGroup>
+
     <ItemGroup>
         <Compile Remove="Images\**" />
         <EmbeddedResource Remove="Images\**" />
@@ -26,17 +31,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="kr.bbon.Core" Version="1.3.0">
+        <PackageReference Include="kr.bbon.Core" Version="1.4.0">
+            <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
+            <ExcludeAssets>contentFiles</ExcludeAssets>
+            <PrivateAssets>contentfiles; analyzers</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0">
             <IncludeAssets>all</IncludeAssets>
             <ExcludeAssets>contentFiles</ExcludeAssets>
             <PrivateAssets>contentFiles;analyzers</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0" >
-            <IncludeAssets>all</IncludeAssets>
-            <ExcludeAssets>contentFiles</ExcludeAssets>
-            <PrivateAssets>contentFiles;analyzers</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" >
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0">
             <IncludeAssets>all</IncludeAssets>
             <ExcludeAssets>contentFiles</ExcludeAssets>
             <PrivateAssets>contentFiles;analyzers</PrivateAssets>
