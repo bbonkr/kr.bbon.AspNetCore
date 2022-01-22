@@ -1,11 +1,12 @@
-name: publish to nuget
+name: 'Publish to nuget'
+
 on:
-  push:
-    branches:
-      - main # Default release branch
+  release:
+    types: [published]
+
 jobs:
   publish:
-    name: build, pack & publish
+    name: 'Publish to nuget'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,16 +15,34 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --no-restore
+
 #       - name: Test
 #         run: dotnet test --no-build --verbosity normal
+
+      - name: Get version 
+        uses: bbonkr/get-version-action@v1.0.1
+        id: get_version
+        with:
+          project: src/kr.bbon.AspNetCore/kr.bbon.AspNetCore.csproj
+
+      - name: Check git tag 
+        uses: bbonkr/git-tag-check-action@v1.0.5
+        id: git_tag_check
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          tag: 'v${{ steps.get_version.outputs.version }}'
+
       # Publish
-      - name: publish on version change
-        id: publish_nuget
+      - name: publish kr.bbon.Data
+        id: publish_nuget_main
         uses: rohith/publish-nuget@v2
+        if: ${{ steps.git_tag_check.outputs.tag != '' }}
         with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: src/kr.bbon.AspNetCore/kr.bbon.AspNetCore.csproj
@@ -41,7 +60,7 @@ jobs:
           # VERSION_STATIC: 1.0.0
 
           # Flag to toggle git tagging, enabled by default
-          # TAG_COMMIT: true
+          TAG_COMMIT: false
 
           # Format of the git tag, [*] gets replaced with actual version
           # TAG_FORMAT: v*
@@ -54,24 +73,22 @@ jobs:
 
           # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
           # INCLUDE_SYMBOLS: false
-      - name: package-version
-        run: grep '<Version>' < src/kr.bbon.AspNetCore/kr.bbon.AspNetCore.csproj | echo "::set-output name=version::$(sed 's/.*<Version>\(.*\)<\/Version>/\1/')"
-        id: get_package_version
-      - name: set-version  
-        run: echo "PACKAGE_VERSION=${{ steps.get_package_version.outputs.version }}" >> $GITHUB_ENV
-#       - name: package-version-to-git-tag
-#         uses: pkgdeps/git-tag-action@v2
-#         with:
-#           github_token: ${{ secrets.GH_TOKEN }}
-#           github_repo: ${{ github.repository }}
-#           version: ${{ env.PACKAGE_VERSION }}
-#           git_commit_sha: ${{ github.sha }}
-#           git_tag_prefix: "v"
-      - name: Release Drafter
-        id: release_drafter
-        uses: release-drafter/release-drafter@v5
+
+      - name: Notify to slack
+        uses: 8398a7/action-slack@v3
         with:
-          config-name: release-drafter.yml
-          version: ${{ env.PACKAGE_VERSION }}
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always() # Pick up events even if the job fails or is canceled. 
+      - name: Notify to Microsoft Teams
+        uses: skitionek/notify-microsoft-teams@master
+        if: always()
+        with:
+          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+          needs: ${{ toJson(needs) }}
+          job: ${{ toJson(job) }}
+          steps: ${{ toJson(steps) }}          
+      
+   

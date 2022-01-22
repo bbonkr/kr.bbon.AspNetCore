@@ -5,7 +5,7 @@
         <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
         <PackageId>kr.bbon.AspNetCore</PackageId>
         <Title>kr.bbon.AspNetCore</Title>
-        <Version>1.2.0</Version>
+        <Version>1.2.1</Version>
         <Authors>Pon Cheol Ku (bbon@live.com)</Authors>
         <Company>bbon.kr</Company>
         <Copyright>bbon.kr. All rights reserved.</Copyright>
