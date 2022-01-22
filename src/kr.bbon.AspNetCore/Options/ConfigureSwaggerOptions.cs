@@ -115,7 +115,10 @@ namespace kr.bbon.AspNetCore.Options
 
         protected override void SwaggerDoc(SwaggerGenOptions options, ApiVersionDescription apiVersionDescription)
         {
-            openApiInfo.Version = apiVersionDescription.ApiVersion.ToString();
+            if (string.IsNullOrWhiteSpace(openApiInfo.Version))
+            {
+                openApiInfo.Version = apiVersionDescription.ApiVersion.ToString();
+            }
 
             options.SwaggerDoc(apiVersionDescription.GroupName, openApiInfo);
         }

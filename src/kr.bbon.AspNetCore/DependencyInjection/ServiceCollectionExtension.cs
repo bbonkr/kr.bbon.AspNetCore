@@ -16,6 +16,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace kr.bbon.AspNetCore.DependencyInjection
 {
@@ -119,18 +121,55 @@ namespace kr.bbon.AspNetCore.DependencyInjection
         /// </example>
         public static IServiceCollection ConfigureAppOptions(this IServiceCollection services, IConfiguration configuration = null)
         {
+            var serviceDescriptor = GetServiceDescriptor(services, typeof(OpenApiInfo));
+
             if (configuration == null)
             {
-                services.AddOptions<AppOptions>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name));
-                services.AddOptions<OpenApiInfo>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name));
+                services.AddOptions<AppOptions>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name).Bind(options));
+
+                if (serviceDescriptor == null)
+                {
+                    services.AddOptions<OpenApiInfo>().Configure<IConfiguration>((options, configuration) => configuration.GetSection(AppOptions.Name).Bind(options));
+                }
             }
             else
             {
                 services.Configure<AppOptions>(configuration.GetSection(AppOptions.Name));
-                services.Configure<OpenApiInfo>(configuration.GetSection(AppOptions.Name));
+                if (serviceDescriptor == null)
+                {
+                    services.Configure<OpenApiInfo>(configuration.GetSection(AppOptions.Name));
+                }
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Configure <see cref="OpenApiInfo"/>.
+        /// <para>
+        /// Fill complete this information to use.
+        /// </para>
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configureAction"></param>
+        /// <returns></returns>
+        public static IServiceCollection ConfigureOpenApiInfo(this IServiceCollection services, Action<OpenApiInfo> configureAction)
+        {
+            var serviceDescriptor = GetServiceDescriptor(services, typeof(OpenApiInfo));
+            if (serviceDescriptor != null)
+            {
+                services.Remove(serviceDescriptor);
+            }
+
+            services.Configure<OpenApiInfo>(configureAction);
+
+            return services;
+        }
+
+        private static ServiceDescriptor GetServiceDescriptor(IServiceCollection services, Type implementationType)
+        {
+            var serviceDescriptor = services.Where(x => x.ImplementationType == implementationType).FirstOrDefault();
+            return serviceDescriptor;
         }
 
         public static IServiceCollection AddHealthCheck<THealthChecker>(this IServiceCollection services, string name= "default_health_check") where THealthChecker : HealthCheckBase
@@ -150,10 +189,13 @@ namespace kr.bbon.AspNetCore.DependencyInjection
         /// <param name="configureMoreOptions">Configure more</param>
         /// <returns></returns>
         public static IServiceCollection AddForwardedHeaders(this IServiceCollection services, 
-            bool enabledForwardedHeaders = false, 
+            bool? enabledForwardedHeaders = null, 
             Action<ForwardedHeadersOptions> configureMoreOptions = null)
         {
-            if (enabledForwardedHeaders)
+            var enabledForwardedHeadersEnvironmentValue = Convert.ToBoolean(Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"));
+            var enabledForwardedHeadersValue = enabledForwardedHeaders.HasValue ? enabledForwardedHeaders.Value : enabledForwardedHeadersEnvironmentValue;
+
+            if (enabledForwardedHeadersValue)
             {
                 services.Configure<ForwardedHeadersOptions>(options =>
                 {
@@ -171,6 +213,80 @@ namespace kr.bbon.AspNetCore.DependencyInjection
                     }
                 });
             }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Configure JsonSerializerOptions and JsonOptions
+        /// <para>
+        /// Settings:
+        /// <list type="bullet">
+        ///   <item>PropertyNamingPolicy: <see cref="JsonNamingPolicy.CamelCase"/></item>
+        ///   <item>DefaultIgnoreCondition: <see cref="JsonIgnoreCondition.WhenWritingNull"/></item>
+        ///   <item>DictionaryKeyPolicy: <see cref="JsonNamingPolicy.CamelCase"/></item>
+        ///   <item>AllowTrailingCommas: true</item>
+        ///   <item>IgnoreReadOnlyFields: true</item>
+        ///   <item>IgnoreReadOnlyProperties: true</item>
+        ///   <item>WriteIndented: true</item>
+        ///   <item>NumberHandling: <see cref="JsonNumberHandling.AllowNamedFloatingPointLiterals"/></item>
+        ///   <item>PropertyNameCaseInsensitive: true</item>
+        ///   <item>Encoder: <see cref="System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping"/></item>
+        ///   <item>
+        ///   <para>
+        ///     Converters:
+        ///     <list type="bullet">
+        ///       <item><see cref="JsonStringEnumConverter"/></item>
+        ///     </list>
+        ///   </para>
+        ///   </item>
+        /// </list>
+        /// </para>
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configureAction"></param>
+        /// <returns></returns>
+        public static IServiceCollection ConfigureDefaultJsonOptions(this IServiceCollection services, Action<JsonOptions> configureAction = null)
+        {
+            // TODO Try to configure JsonOptions using JsonSerializerOptions
+            services.Configure<JsonSerializerOptions>(options =>
+            {
+                options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                options.AllowTrailingCommas = true;
+                options.IgnoreReadOnlyFields = true;
+                options.IgnoreReadOnlyProperties = true;
+                options.WriteIndented = true;
+                options.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                options.PropertyNameCaseInsensitive = true;
+                // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-character-encoding#serialize-all-characters
+                options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+
+                options.Converters.Add(new JsonStringEnumConverter());
+            });
+
+            services.Configure<JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.AllowTrailingCommas = true;
+                options.JsonSerializerOptions.IgnoreReadOnlyFields = true;
+                options.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
+                options.JsonSerializerOptions.WriteIndented = true;
+                options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-character-encoding#serialize-all-characters
+                options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+                if (configureAction != null)
+                {
+                    configureAction(options);
+                }
+            });
 
             return services;
         }
