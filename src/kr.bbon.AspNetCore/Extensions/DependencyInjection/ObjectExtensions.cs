@@ -1,7 +1,7 @@
 ﻿/**
  * extensions of Object type 
  */
-namespace kr.bbon.AspNetCore.DependencyInjection
+namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
 {
     using System;
     using System.Text.Encodings.Web;

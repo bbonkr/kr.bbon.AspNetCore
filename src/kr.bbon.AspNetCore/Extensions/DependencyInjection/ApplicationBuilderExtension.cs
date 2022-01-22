@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace kr.bbon.AspNetCore.DependencyInjection
+namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtension
     {

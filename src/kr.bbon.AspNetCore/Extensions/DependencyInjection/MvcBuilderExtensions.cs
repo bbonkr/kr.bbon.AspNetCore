@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace kr.bbon.AspNetCore.DependencyInjection
+namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
 {
     public static class MvcBuilderExtensions
     {
