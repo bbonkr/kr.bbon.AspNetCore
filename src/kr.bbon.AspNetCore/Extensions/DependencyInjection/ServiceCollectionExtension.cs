@@ -19,7 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace kr.bbon.AspNetCore.DependencyInjection
+namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtension
     {

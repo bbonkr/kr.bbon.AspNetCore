@@ -1,4 +1,4 @@
-using kr.bbon.AspNetCore.DependencyInjection;
+using kr.bbon.AspNetCore.Extensions.DependencyInjection;
 using kr.bbon.AspNetCore.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +23,6 @@ builder.Services.ConfigureAppOptions();
 //    options.Contact = new Microsoft.OpenApi.Models.OpenApiContact
 //    {
 //        Name = "Pon Cheol Ku",
-//        Email = "-",
-//        Url = new Uri("https://bbon.kr"),
 //    };
 //});
 
