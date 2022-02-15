@@ -28,7 +28,7 @@ namespace kr.bbon.AspNetCore.Filters
             return Task.CompletedTask;
         }
 
-        private void HandleException(ExceptionContext context)
+        protected virtual void HandleException(ExceptionContext context)
         {
             ObjectResult actionResult = default;
 
