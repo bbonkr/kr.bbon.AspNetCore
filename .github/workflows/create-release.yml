@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@v2
+      - name: Checkout 
+        uses: actions/checkout@v3
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
@@ -38,11 +39,13 @@ jobs:
       - name: Notify to slack
         uses: 8398a7/action-slack@v3
         with:
+          job_name: "create release" 
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always() # Pick up events even if the job fails or is canceled. 
+
       - name: Notify to Microsoft Teams
         uses: skitionek/notify-microsoft-teams@master
         if: always()
