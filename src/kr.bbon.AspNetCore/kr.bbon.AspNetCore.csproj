@@ -37,7 +37,7 @@
             <ExcludeAssets>contentFiles</ExcludeAssets>
             <PrivateAssets>contentFiles;analyzers</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.*">
+        <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.*">
             <IncludeAssets>all</IncludeAssets>
             <ExcludeAssets>contentFiles</ExcludeAssets>
             <PrivateAssets>contentFiles;analyzers</PrivateAssets>
