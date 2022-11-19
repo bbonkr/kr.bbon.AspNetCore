@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using kr.bbon.Core;
+using kr.bbon.Core.Exceptions;
 using kr.bbon.AspNetCore.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,7 @@ namespace kr.bbon.AspNetCore.Filters
 
             var path = context.HttpContext.Request.Path;
             var method = context.HttpContext.Request.Method;
-            var instance = context.ActionDescriptor.DisplayName;            
+            var instance = context.ActionDescriptor.DisplayName;
 
             if (context.Exception is HttpStatusException httpStatusException)
             {

@@ -11,5 +11,6 @@ namespace kr.bbon.AspNetCore
         public const string RouteTemplate = "[area]/v{version:apiVersion}/[controller]";
         public const string ApiVersion = "1.0";
         public const string AreaName = "api";
+        public const string ContentTypeApplicationJson = "application/json";
     }
 }
