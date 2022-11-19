@@ -5,22 +5,32 @@ on:
 
 jobs:
   verify-build:
-    name: 'Verify to build'
+    name: "Verify to build 👉 ${{ matrix.os }}"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 7.0.x
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
+
+  reporting:
+    name: 'Reporing'
+    needs: [verify-build]
+    runs-on: ubuntu-latest
+    steps:
 
       - name: Add comment 
         uses: unsplash/comment-on-pr@v1.3.0

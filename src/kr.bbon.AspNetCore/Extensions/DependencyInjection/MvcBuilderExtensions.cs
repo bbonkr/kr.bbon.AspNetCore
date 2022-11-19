@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using kr.bbon.Core.Exceptions;
 using kr.bbon.Core.Models;
 using kr.bbon.Core;
 
