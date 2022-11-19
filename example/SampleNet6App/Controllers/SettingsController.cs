@@ -1,7 +1,7 @@
 ﻿using kr.bbon.AspNetCore;
 using kr.bbon.AspNetCore.Models;
 using kr.bbon.AspNetCore.Mvc;
-using kr.bbon.Core;
+using kr.bbon.Core.Exceptions;
 using kr.bbon.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,7 +15,7 @@ namespace SampleNet6App.Controllers;
 [ApiVersion(DefaultValues.ApiVersion)]
 [Route(DefaultValues.RouteTemplate)]
 [Area(DefaultValues.AreaName)]
-[Produces("application/json")]
+[Produces(DefaultValues.ContentTypeApplicationJson)]
 [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiResponseModel<ErrorModel>))]
 [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponseModel<ErrorModel>))]
 [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ApiResponseModel<ErrorModel>))]
@@ -45,6 +45,6 @@ public class SettingsController : ApiControllerBase
         StatusCodes.Status500InternalServerError => throw new ApiException(status, $"You requested internal server error"),
         _ => StatusCode(status, appOptions)
     };
-        
-    
+
+
 }
