@@ -39,8 +39,6 @@
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
 		</PackageReference>
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.*">
 			<IncludeAssets>all</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
