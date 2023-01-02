@@ -24,7 +24,7 @@
 		<None Include="../../README.md" Pack="true" PackagePath="/" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="kr.bbon.Core" Version="1.5.*">
+		<PackageReference Include="kr.bbon.Core" Version="1.6.*">
 			<IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentfiles; analyzers</PrivateAssets>
