@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using kr.bbon.AspNetCore.Options;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
-using kr.bbon.AspNetCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+#if NET8_0_OR_GREATER
+using Asp.Versioning;
+#endif
 
 namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
 {
@@ -35,19 +33,31 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
         /// <param name="setupAction"></param>
         /// <returns></returns>
         public static IServiceCollection AddApiVersioningAndSwaggerGen<ActualConfigureSwaggerOptions>(
-            this IServiceCollection services, 
-            ApiVersion apiVersion = default, 
+            this IServiceCollection services,
+            ApiVersion apiVersion = default,
             Action<SwaggerGenOptions> setupAction = null) where ActualConfigureSwaggerOptions : ConfigureSwaggerOptionsBase
         {
             var actualApiVersion = apiVersion ?? new ApiVersion(1, 0);
 
+#if NET8_0_OR_GREATER
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = actualApiVersion;
+            }).AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+#else
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.RegisterMiddleware = true;
                 options.DefaultApiVersion = actualApiVersion;
-                options.ReportApiVersions = true;                
+                options.ReportApiVersions = true;
             });
 
             services.AddVersionedApiExplorer(options =>
@@ -56,6 +66,7 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
                 options.SubstituteApiVersionInUrl = true;
                 options.DefaultApiVersion = actualApiVersion;
             });
+#endif
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ActualConfigureSwaggerOptions>();
 
@@ -80,8 +91,8 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
         /// <param name="defaultVersion"></param>
         /// <returns></returns>
         public static IServiceCollection AddApiVersioningAndSwaggerGen(
-            this IServiceCollection services, 
-            ApiVersion defaultVersion = default, 
+            this IServiceCollection services,
+            ApiVersion defaultVersion = default,
             Action<SwaggerGenOptions> setupAction = null)
         {
             services.AddApiVersioningAndSwaggerGen<DefaultSwaggerOptions>(defaultVersion, setupAction);
@@ -172,7 +183,7 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
             return serviceDescriptor;
         }
 
-        public static IServiceCollection AddHealthCheck<THealthChecker>(this IServiceCollection services, string name= "default_health_check") where THealthChecker : HealthCheckBase
+        public static IServiceCollection AddHealthCheck<THealthChecker>(this IServiceCollection services, string name = "default_health_check") where THealthChecker : HealthCheckBase
         {
             services.AddHealthChecks()
                 .AddCheck<THealthChecker>(name);
@@ -188,8 +199,8 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
         /// <param name="enabledForwardedHeaders">Typically use this code `Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED")`</param>
         /// <param name="configureMoreOptions">Configure more</param>
         /// <returns></returns>
-        public static IServiceCollection AddForwardedHeaders(this IServiceCollection services, 
-            bool? enabledForwardedHeaders = null, 
+        public static IServiceCollection AddForwardedHeaders(this IServiceCollection services,
+            bool? enabledForwardedHeaders = null,
             Action<ForwardedHeadersOptions> configureMoreOptions = null)
         {
             var enabledForwardedHeadersEnvironmentValue = Convert.ToBoolean(Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"));
@@ -206,7 +217,7 @@ namespace kr.bbon.AspNetCore.Extensions.DependencyInjection
                     // configuration.
                     options.KnownNetworks.Clear();
                     options.KnownProxies.Clear();
-                    
+
                     if (configureMoreOptions != null)
                     {
                         configureMoreOptions(options);

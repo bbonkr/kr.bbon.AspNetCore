@@ -23,7 +23,7 @@ namespace kr.bbon.AspNetCore.Models
         public T Data { get; set; }
     }
 
-    public class ApiResponseModel<T>: IApiResponseWithData<T>
+    public class ApiResponseModel<T> : IApiResponseWithData<T>
     {
         public int StatusCode { get; set; }
 
@@ -41,7 +41,7 @@ namespace kr.bbon.AspNetCore.Models
     /// <summary>
     /// Factory for <see cref="ApiResponseModel"/>
     /// </summary>
-    public class ApiResponseModelFactory
+    public static class ApiResponseModelFactory
     {
         public static ApiResponseModel<object> Create(HttpStatusCode statusCode, string message)
         {
