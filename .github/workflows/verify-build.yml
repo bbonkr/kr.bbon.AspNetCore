@@ -1,7 +1,10 @@
-name: 'Verify to Build'
+name: "Verify to Build"
 
 on:
   pull_request:
+
+env:
+  DOTNET_VERSION: 8.0.x
 
 jobs:
   verify-build:
@@ -12,13 +15,13 @@ jobs:
         os: [ubuntu-latest, windows-latest]
 
     steps:
-      - name: Checkout 
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore
@@ -27,12 +30,11 @@ jobs:
         run: dotnet build --no-restore
 
   reporting:
-    name: 'Reporing'
+    name: "Reporing"
     needs: [verify-build]
     runs-on: ubuntu-latest
     steps:
-
-      - name: Add comment 
+      - name: Add comment
         uses: unsplash/comment-on-pr@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -49,13 +51,4 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always() # Pick up events even if the job fails or is canceled. 
-
-      - name: Notify to Microsoft Teams
-        uses: skitionek/notify-microsoft-teams@master
-        if: always()
-        with:
-          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          steps: ${{ toJson(steps) }}          
+        if: always() # Pick up events even if the job fails or is canceled.
