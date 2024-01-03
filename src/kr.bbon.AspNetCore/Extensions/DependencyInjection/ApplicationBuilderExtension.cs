@@ -4,7 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+#if NET8_0_OR_GREATER
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+#else
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+#endif
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
