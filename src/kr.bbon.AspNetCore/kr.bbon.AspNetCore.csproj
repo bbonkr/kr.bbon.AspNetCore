@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net5.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<PackageId>kr.bbon.AspNetCore</PackageId>
 		<Title>kr.bbon.AspNetCore</Title>
-		<Version>1.4.0</Version>
+		<Version>1.5.0</Version>
 		<Authors>Pon Cheol Ku (bbon@live.com)</Authors>
 		<Company>bbon.kr</Company>
 		<Copyright>bbon.kr. All rights reserved.</Copyright>
@@ -24,22 +24,45 @@
 		<None Include="../../README.md" Pack="true" PackagePath="/" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="kr.bbon.Core" Version="1.5.*">
+		<PackageReference Include="kr.bbon.Core" Version="1.7.*">
 			<IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentfiles; analyzers</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.*">
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.*">
 			<IncludeAssets>all</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.*">
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.*">
 			<IncludeAssets>all</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
 		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.*">
+			<IncludeAssets>all</IncludeAssets>
+			<ExcludeAssets>contentFiles</ExcludeAssets>
+			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.*">
+			<IncludeAssets>all</IncludeAssets>
+			<ExcludeAssets>contentFiles</ExcludeAssets>
+			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.*">
+			<IncludeAssets>all</IncludeAssets>
+			<ExcludeAssets>contentFiles</ExcludeAssets>
+			<PrivateAssets>contentFiles;analyzers</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+		<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.*">
 			<IncludeAssets>all</IncludeAssets>
 			<ExcludeAssets>contentFiles</ExcludeAssets>
 			<PrivateAssets>contentFiles;analyzers</PrivateAssets>

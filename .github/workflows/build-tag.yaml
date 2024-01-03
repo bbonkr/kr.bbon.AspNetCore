@@ -7,19 +7,20 @@ on:
 env:
   TARGET_PROJECT_PATH: src/kr.bbon.AspNetCore/
   TARGET_PROJECT_FILE: kr.bbon.AspNetCore.csproj
+  DOTNET_VERSION: 8.0.x
 
 jobs:
   publish:
     name: build, pack & publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
         run: dotnet restore
@@ -27,22 +28,19 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-#       - name: Test
-#         run: dotnet test --no-build --verbosity normal
-
-      - name: Get version 
-        uses: bbonkr/get-version-action@v1.0.1
+      - name: Get version
+        uses: bbonkr/get-version-action@v1
         id: get_version
         with:
           project: "${{ env.TARGET_PROJECT_PATH }}${{ env.TARGET_PROJECT_FILE }}"
 
-      - name: Check git tag 
-        uses: bbonkr/git-tag-check-action@v1.0.9
+      - name: Check git tag
+        uses: bbonkr/git-tag-check-action@v1
         id: git_tag_check
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-          tag: 'v${{ steps.get_version.outputs.version }}'
-        
+          tag: "v${{ steps.get_version.outputs.version }}"
+
       - name: Create git tag
         uses: pkgdeps/git-tag-action@v2
         if: ${{ steps.git_tag_check.outputs.tag == '' }}
@@ -66,13 +64,4 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always() # Pick up events even if the job fails or is canceled. 
-
-      - name: Notify to Microsoft Teams
-        uses: skitionek/notify-microsoft-teams@master
-        if: always()
-        with:
-          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          steps: ${{ toJson(steps) }}          
+        if: always() # Pick up events even if the job fails or is canceled.

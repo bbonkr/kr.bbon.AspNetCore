@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleNet6App", "example\Sa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{B12F63BA-4933-42EE-96AC-02328BBD3DF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleNet8App", "example\SampleNet8App\SampleNet8App.csproj", "{50BBA135-EE6C-4D84-986D-7FE7C6E95119}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,18 @@ Global
 		{619B110C-FE78-41AE-BFF8-5E1F1516A421}.Release|x64.Build.0 = Release|Any CPU
 		{619B110C-FE78-41AE-BFF8-5E1F1516A421}.Release|x86.ActiveCfg = Release|Any CPU
 		{619B110C-FE78-41AE-BFF8-5E1F1516A421}.Release|x86.Build.0 = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|x64.Build.0 = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Debug|x86.Build.0 = Debug|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|x64.ActiveCfg = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|x64.Build.0 = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|x86.ActiveCfg = Release|Any CPU
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +81,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{49E71577-3E80-4978-89CA-58AE5E0B1DEC} = {B12F63BA-4933-42EE-96AC-02328BBD3DF3}
 		{619B110C-FE78-41AE-BFF8-5E1F1516A421} = {B12F63BA-4933-42EE-96AC-02328BBD3DF3}
+		{50BBA135-EE6C-4D84-986D-7FE7C6E95119} = {B12F63BA-4933-42EE-96AC-02328BBD3DF3}
 	EndGlobalSection
 EndGlobal

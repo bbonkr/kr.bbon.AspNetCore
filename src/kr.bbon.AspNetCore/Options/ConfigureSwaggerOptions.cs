@@ -4,7 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#if NET8_0_OR_GREATER
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+#else
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+#endif
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -135,10 +141,7 @@ namespace kr.bbon.AspNetCore.Options
                 var area = d.ActionDescriptor.RouteValues["area"] ?? string.Empty;
                 // https://github.com/microsoft/aspnet-api-versioning/blob/master/src/Common/Versioning/ApiVersionFormatProvider.cs
                 var version = d.GetApiVersion().ToString("'v'VVVV");
-                //if (!string.IsNullOrWhiteSpace(version))
-                //{
-                //    version = $"v{version}";
-                //}
+
                 var controller = d.ActionDescriptor.RouteValues["controller"];
                 var action = d.ActionDescriptor.RouteValues["action"] ?? d.HttpMethod;
 
